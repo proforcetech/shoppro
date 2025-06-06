@@ -1,5 +1,5 @@
 ShopPro Deployment & Usage Documentation
-#  ShopPro
+##  ShopPro
 
 Full-stack automotive repair shop management platform.
 
@@ -34,17 +34,17 @@ Full-stack automotive repair shop management platform.
 
 ## Quick Start (Development)
 
-```bash
-git clone https://github.com/your-org/shoppro.git
-cd shoppro
-cp .env.example .env   # Edit credentials and secrets
-docker-compose up --build
+	```bash
+	git clone https://github.com/your-org/shoppro.git
+	cd shoppro
+	cp .env.example .env   # Edit credentials and secrets
+	docker-compose up --build
 
-    Frontend: http://localhost:5173
+	Frontend: http://localhost:5173
 
-    Backend API: http://localhost:3000
+	Backend API: http://localhost:3000
 
-    PostgreSQL: internal port 5432
+	PostgreSQL: internal port 5432
 
 ##  Environment Variables (.env)
 
