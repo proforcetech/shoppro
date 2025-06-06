@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2023", // Good, ES2022 or higher is what we aimed for
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true, // You had this as true, which is generally good practice
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false,
+    "useDefineForClassFields": false, // This is crucial and correctly set to false!
+    "strictBindCallApply": false,
+    "noFallthroughCasesInSwitch": false, // <--- ADDED COMMA HERE
+    "rootDir": "./src" // <--- THIS IS A GOOD ADDITION FOR CLARITY
+  },
+  "include": ["src/**/*"], // <--- ENSURE THIS IS PRESENT AND CORRECT
+  "exclude": ["node_modules", "dist"] // <--- Keep "dist" here in the base tsconfig, as it's an output folder
+}
