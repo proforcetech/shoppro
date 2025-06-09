@@ -9,7 +9,7 @@ async function main() {
   });
 
   if (existingUser) {
-    console.log('🔁 Admin user already exists:', existingUser.email);
+    console.log('Admin user already exists:', existingUser.email);
     return;
   }
 
@@ -24,7 +24,7 @@ async function main() {
     },
   });
 
-  console.log('✅ Admin user seeded:', user.email);
+  console.log('Admin user seeded:', user.email);
 }
 
 main()

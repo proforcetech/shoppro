@@ -1,22 +1,17 @@
-# 🛠 Build Stage
-FROM node:20 as builder
+# Use a standard Node.js image
+FROM node:18-alpine
+
+# Set the working directory inside the container
 WORKDIR /app
+
+# Copy package files and install dependencies
+COPY package*.json ./
+RUN npm install --legacy-peer-deps
+
+# Copy the rest of the frontend code
 COPY . .
-RUN npm install && npm run build
 
-# 🚀 Production Stage
-FROM nginx:alpine
-WORKDIR /etc/nginx
+# Expose the port Vite will run on
+EXPOSE 5173
 
-# Copy build output
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Copy SSL certs
-COPY ssl/selfsigned.crt /etc/ssl/certs/selfsigned.crt
-COPY ssl/selfsigned.key /etc/ssl/private/selfsigned.key
-
-# Copy Nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-EXPOSE 443
-CMD ["nginx", "-g", "daemon off;"]
+# The command to run the app will be provided by docker-compose
