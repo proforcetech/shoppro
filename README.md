@@ -1,5 +1,9 @@
 ShopPro Deployment & Usage Documentation
+<<<<<<< HEAD
 #  ShopPro
+=======
+##  ShopPro
+>>>>>>> 9a55b4f6415b830ca599de349672074f77b679da
 
 Full-stack automotive repair shop management platform.
 
@@ -18,7 +22,7 @@ Full-stack automotive repair shop management platform.
 | Environment      | CPU         | RAM     | Storage | OS                  |
 |------------------|-------------|---------|---------|---------------------|
 | **Development**  | 4 cores     | 8 GB    | 10 GB   | Ubuntu/macOS/WSL2   |
-| **Production**   | 4+ vCPUs    | 8–16 GB | 20+ GB  | Ubuntu 22.04 LTS    |
+| **Production**   | 4+ vCPUs    | 8â€“16 GB | 20+ GB  | Ubuntu 22.04 LTS    |
 
 ---
 
@@ -34,17 +38,17 @@ Full-stack automotive repair shop management platform.
 
 ## Quick Start (Development)
 
-```bash
-git clone https://github.com/your-org/shoppro.git
-cd shoppro
-cp .env.example .env   # Edit credentials and secrets
-docker-compose up --build
+	```bash
+	git clone https://github.com/your-org/shoppro.git
+	cd shoppro
+	cp .env.example .env   # Edit credentials and secrets
+	docker-compose up --build
 
-    Frontend: http://localhost:5173
+	Frontend: http://localhost:5173
 
-    Backend API: http://localhost:3000
+	Backend API: http://localhost:3000
 
-    PostgreSQL: internal port 5432
+	PostgreSQL: internal port 5432
 
 ##  Environment Variables (.env)
 
@@ -130,4 +134,8 @@ Update /frontend/nginx.conf:
 
 # License
 
+<<<<<<< HEAD
 MIT © 2025 Advanced Alternative Solutions LLC
+=======
+MIT Â© 2025 Advanced Alternative Solutions LLC
+>>>>>>> 9a55b4f6415b830ca599de349672074f77b679da
