@@ -1,8 +1,8 @@
 // src/App.tsx
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router';
 import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
-import { ProtectedRoute } from './router/ProtectedRoute';
+import ProtectedRoute from './router/ProtectedRoute';
 
 import LoginPage from './pages/Login';
 import { Dashboard } from './pages/Dashboard';

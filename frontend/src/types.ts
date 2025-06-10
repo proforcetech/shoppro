@@ -1,4 +1,16 @@
+export type User = {
+  id: string;
+  email: string;
+  role: string;
+};
 
+export type DecodedToken = {
+  sub: string;
+  email: string;
+  role: string;
+  iat: number;
+  exp: number;
+};
 // VehicleType
 export type VehicleType = {
   id: string;
