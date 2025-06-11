@@ -1,5 +1,10 @@
-// backend/tsconfig.build.json
 {
   "extends": "./tsconfig.json",
-  "exclude": ["node_modules", "test", "**/*spec.ts"] // Removed "dist" from here
+  "compilerOptions": {
+    "outDir": "./dist",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true
+  },
+  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
 }

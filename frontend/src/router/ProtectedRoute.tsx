@@ -1,23 +1,25 @@
-import { Navigate } from "react-router";
-import { useAuth } from "../context/AuthContext";
+import React, { ReactNode } from 'react';
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  const { isAuthenticated, loading } = useAuth();
+type ProtectedRouteProps = {
+  children: ReactNode; // Use ReactNode for maximum compatibility
+  role?: string;
+};
 
-  // First, wait for the initial token check to complete.
-  // While loading is true, don't render anything or redirect.
-  if (loading) {
-    return <div>Loading session...</div>; // Or a spinner component
+const ProtectedRoute = ({ children, role }: ProtectedRouteProps) => {
+  const { user } = useAuth();
+
+  if (!user) {
+    return <Navigate to="/login" />;
   }
 
-  // After loading is false, now check for authentication.
-  if (!isAuthenticated) {
-    // If not authenticated, redirect to the login page.
-    return <Navigate to="/login" replace />;
+  if (role && user.role !== role) {
+    return <Navigate to="/unauthorized" />;
   }
 
-  // If authenticated, render the requested component (e.g., Dashboard).
-  return children;
+  // Return the children. Wrapping in a fragment is good practice.
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;

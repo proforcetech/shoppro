@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { api } from '../../api/client';
+import apiClient from '../../api/client';
 
 export const AddPaymentForm = ({ invoiceId }: { invoiceId: string }) => {
   const [amount, setAmount] = useState('');

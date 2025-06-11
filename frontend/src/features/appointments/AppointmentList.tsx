@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { api } from '../../api/client';
+import apiClient from '../../api/client';
 
 // Adjusted Vehicle interface (added optional vin)
 interface Vehicle {

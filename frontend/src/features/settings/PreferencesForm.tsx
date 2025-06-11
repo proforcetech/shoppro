@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { api } from '../../api/client';
+import apiClient from '../../api/client';
 
 export const PreferencesForm = () => {
   const [prefs, setPrefs] = useState({ backupEnabled: false, terms: '' });

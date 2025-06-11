@@ -11,7 +11,7 @@ export type DecodedToken = {
   iat: number;
   exp: number;
 };
-// VehicleType
+
 export type VehicleType = {
   id: string;
   vin: string;
@@ -19,21 +19,21 @@ export type VehicleType = {
   make: string;
   model: string;
 };
+
 export interface Job {
   description: string;
   laborHours: number;
   rate: number;
-  parts: any[]; // tighten this up if you know the parts shape
+  parts: any[]; // You can define a 'Part' type for better type safety
 }
-// InvoiceType
+
 export type InvoiceType = {
   id: string;
   status: string;
   total: number;
-  payments: any[];
+  payments: any[]; // You can define a 'Payment' type
 };
 
-// CustomerType
 export type CustomerType = {
   id: string;
   name: string;
@@ -43,4 +43,10 @@ export type CustomerType = {
   vehicles: VehicleType[];
 };
 
-
+export interface Estimate {
+  id: string;
+  status: 'DRAFT' | 'APPROVED' | 'REJECTED';
+  vehicle: VehicleType; // An estimate is linked to a single vehicle
+  jobs: Job[];
+  createdAt: string;
+}

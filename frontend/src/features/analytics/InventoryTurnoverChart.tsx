@@ -1,7 +1,7 @@
 import type { AxiosResponse } from 'axios';
 import { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
-import { api } from '../../api/client';
+import apiClient from '../../api/client';
 import {
   Chart as ChartJS,
   CategoryScale,

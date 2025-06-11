@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { api } from '../api/client';
+import apiClient from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { StatCard } from '../components/cards/StatCard';
 import { FaMoneyBillWave, FaTools, FaUser, FaBoxes } from 'react-icons/fa';

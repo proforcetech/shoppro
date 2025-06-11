@@ -1,5 +1,5 @@
 import { AddPaymentForm } from './AddPaymentForm';
-import { api } from '../../api/client';
+import apiClient from '../../api/client';
 
 export const InvoiceDetails = ({ invoice }: any) => {
   const sendEmail = async () => {

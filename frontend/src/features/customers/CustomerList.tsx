@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { api } from '../../api/client';
+import apiClient from '../../api/client';
 import { VehicleList } from './VehicleList';
 
 // 1. Define an interface for the Vehicle data

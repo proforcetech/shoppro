@@ -1,9 +1,12 @@
-// src/features/auth/auth.service.ts
-import api from '../../api/axios';
+// proforcetech/shoppro/shoppro-06bf0ed64f7d8a05ba37c69644472fc852ae8c80/frontend/src/features/auth/auth.service.ts
 
-export const login = async (email: string, password: string) => {
-  const res = await api.post('/auth/login', { email, password });
-  const { accessToken } = res.data;
-  localStorage.setItem('token', accessToken);
-  return accessToken;
+import apiClient from '../../api/client';
+
+const login = async (credentials: { email: string; password: string }) => {
+  const response = await apiClient.post('/auth/login', credentials);
+  return response.data;
+};
+
+export default {
+  login,
 };

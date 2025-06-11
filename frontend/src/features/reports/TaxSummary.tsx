@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { api } from '../../api/client';
+import apiClient from '../../api/client';
 import { type AxiosResponse } from 'axios';
 
 export const TaxSummary = () => {
