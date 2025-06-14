@@ -10,16 +10,23 @@ interface Vehicle {
   make: string;
   model: string;
   year: number;
+  trim: string;
+  engine: string;
+  drive: string;
   mileage: number;
 }
 
 // 2. Define an interface for the Customer data
 interface Customer {
   id: string | number; // Or the specific type from your API (e.g., number, string)
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
   address: string;
+  city: string;
+  state: string;
+  zip: string;
   vehicles: Vehicle[]; // An array of Vehicle objects
 }
 
@@ -39,9 +46,12 @@ export const CustomerList = () => {
     <div className="space-y-6">
       {customers.map((c) => (
         <div key={c.id} className="border p-4 rounded-lg shadow-sm">
-          <h3 className="text-xl font-bold text-gray-800">{c.name}</h3>
+          <h3 className="text-xl font-bold text-gray-800">{c.firstName}&nbsp;{c.lastName}</h3>
           <p className="text-gray-500">{c.email} • {c.phone}</p>
           <p className="text-sm text-gray-400">{c.address}</p>
+          <p className="text-sm text-gray-400">{c.city}</p>
+          <p className="text-sm text-gray-400">{c.state}</p>
+          <p className="text-sm text-gray-400">{c.zip}</p>
 
           {/* Assuming VehicleList expects a prop named 'vehicles' of type Vehicle[] */}
           <VehicleList vehicles={c.vehicles} />

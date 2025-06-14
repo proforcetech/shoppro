@@ -3,11 +3,7 @@ import apiClient from '../../api/client';
 
 export const PreferencesForm = () => {
   const [prefs, setPrefs] = useState({ backupEnabled: false, terms: '' });
-
-  useEffect(() => {
-    apiClient.get('/settings').then(res => setPrefs(res.data));
-  }, []);
-
+ 
   const save = async () => {
     await apiClient.patch('/settings', prefs);
     alert('Preferences updated!');
