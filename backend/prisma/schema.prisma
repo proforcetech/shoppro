@@ -61,6 +61,7 @@ enum EntryType {
 model User {
   id        String   @id @default(uuid())
   name      String?
+  phone     String?
   email     String   @unique
   password  String
   role      Role     

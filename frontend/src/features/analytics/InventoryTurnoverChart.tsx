@@ -21,7 +21,7 @@ export const InventoryTurnoverChart = () => {
   const [parts, setParts] = useState<PartItem[]>([]);
 
   useEffect(() => {
-    api.get('/analytics/inventory').then((res: AxiosResponse<{ turnover: PartItem[] }>) => {
+    apiClient.get('/analytics/inventory').then((res: AxiosResponse<{ turnover: PartItem[] }>) => {
       setParts(res.data.turnover);
     });
   }, []);

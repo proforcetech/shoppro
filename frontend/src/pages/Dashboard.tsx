@@ -19,7 +19,7 @@ export const Dashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await api.get('/analytics/shop');
+        const res = await apiClient.get('/analytics/shop');
         setShopStats(res.data);
       } catch (e) {
         console.error(e);

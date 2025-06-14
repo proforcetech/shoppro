@@ -9,6 +9,8 @@
     "target": "ES2023", // Good, ES2022 or higher is what we aimed for
     "sourceMap": true,
     "outDir": "./dist",
+    "listEmittedFiles": true,
+    "listFiles": true,
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,

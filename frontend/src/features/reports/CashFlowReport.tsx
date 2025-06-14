@@ -5,7 +5,7 @@ export const CashFlowReport = () => {
   const [data, setData] = useState<any>(null);
 
   useEffect(() => {
-    api.get('/reports/cash-flow').then(res => setData(res.data));
+    apiClient.get('/reports/cash-flow').then(res => setData(res.data));
   }, []);
 
   if (!data) return <p>Loading Cash Flow Report...</p>;

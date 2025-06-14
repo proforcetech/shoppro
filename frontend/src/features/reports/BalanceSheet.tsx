@@ -5,7 +5,7 @@ export const BalanceSheet = () => {
   const [data, setData] = useState<any>(null);
 
   useEffect(() => {
-    api.get('/reports/balance-sheet').then(res => setData(res.data));
+    apiClient.get('/reports/balance-sheet').then(res => setData(res.data));
   }, []);
 
   if (!data) return <p>Loading Balance Sheet...</p>;

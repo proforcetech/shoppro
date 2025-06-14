@@ -13,7 +13,7 @@ export const InvoiceList = () => {
   const [selected, setSelected] = useState<InvoiceType | null>(null);
 
   useEffect(() => {
-    api.get('/invoices').then(res => setInvoices(res.data));
+    apiClient.get('/invoices').then(res => setInvoices(res.data));
   }, []);
 
   return (

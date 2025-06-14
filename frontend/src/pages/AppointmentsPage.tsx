@@ -1,4 +1,4 @@
-import { AppointmentForm } from '../features/appointments/AppointmentForm';
+import AppointmentForm from '../features/appointments/AppointmentForm';
 import { AppointmentList } from '../features/appointments/AppointmentList';
 
 export const AppointmentsPage = () => (

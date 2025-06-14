@@ -6,7 +6,7 @@ export const TaxSummary = () => {
   const [data, setData] = useState<any>(null);
 
 useEffect(() => {
-  api.get('/reports/tax-summary').then((res: AxiosResponse<any>) => setData(res.data));
+  apiClient.get('/reports/tax-summary').then((res: AxiosResponse<any>) => setData(res.data));
 }, []);
 
   if (!data) return <p>Loading Tax Summary...</p>;

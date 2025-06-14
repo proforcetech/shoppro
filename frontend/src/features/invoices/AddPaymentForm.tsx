@@ -6,7 +6,7 @@ export const AddPaymentForm = ({ invoiceId }: { invoiceId: string }) => {
   const [method, setMethod] = useState('CASH');
 
   const submit = async () => {
-    await api.patch('/invoices/payment', {
+    await apiClient.patch('/invoices/payment', {
       invoiceId,
       amount: parseFloat(amount),
       method,

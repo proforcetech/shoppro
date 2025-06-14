@@ -12,13 +12,13 @@ export const SupportList = () => {
   const [tickets, setTickets] = useState<SupportTicket[]>([]);
 
   useEffect(() => {
-    api.get('/support').then(res => {
+    apiClient.get('/support').then(res => {
       setTickets(res.data);
     });
   }, []);
 
 const updateStatus = async (id: string, status: 'OPEN' | 'IN_PROGRESS' | 'CLOSED') => {
-  await api.patch(`/support/${id}`, { status });
+  await apiClient.patch(`/support/${id}`, { status });
   setTickets(tickets.map((t) => t.id === id ? { ...t, status } : t));
 };
 

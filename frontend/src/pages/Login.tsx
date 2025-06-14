@@ -11,7 +11,7 @@ export default function LoginPage() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      await login(email, password);
+      await login({ email, password });
       navigate('/dashboard');
     } catch (err) {
       alert('Login failed');

@@ -17,7 +17,7 @@ export const EstimateList = () => {
   const [estimates, setEstimates] = useState<Estimate[]>([]);
 
   useEffect(() => {
-    api.get('/estimates').then(res => setEstimates(res.data));
+    apiClient.get('/estimates').then(res => setEstimates(res.data));
   }, []);
 
   return (

@@ -5,7 +5,7 @@ export const WarrantyList = () => {
   const [claims, setClaims] = useState([]);
 
   useEffect(() => {
-    api.get('/warranty').then(res => setClaims(res.data));
+    apiClient.get('/warranty').then(res => setClaims(res.data));
   }, []);
 
   return (

@@ -1,5 +1,3 @@
-// proforcetech/shoppro/shoppro-06bf0ed64f7d8a05ba37c69644472fc852ae8c80/frontend/src/context/AuthContext.tsx
-
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { User, DecodedToken } from '../types';

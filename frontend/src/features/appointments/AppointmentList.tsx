@@ -49,9 +49,9 @@ export const AppointmentList = () => {
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
 
   useEffect(() => {
-    api.get(`/appointments/day?date=${date}`).then(res => {
+    apiClient.get(`/appointments/day?date=${date}`).then(res => {
       // It's good practice to ensure the data conforms to the type
-      // You might need type assertion if 'api.get' is not strongly typed:
+      // You might need type assertion if 'apiClient.get' is not strongly typed:
       // setList(res.data as Appointment[]);
       setList(res.data);
     });

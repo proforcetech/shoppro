@@ -3,7 +3,7 @@ import apiClient from '../../api/client';
 
 export const InvoiceDetails = ({ invoice }: any) => {
   const sendEmail = async () => {
-    await api.patch(`/invoices/${invoice.id}/email`);
+    await apiClient.patch(`/invoices/${invoice.id}/email`);
     alert('Invoice emailed!');
   };
 

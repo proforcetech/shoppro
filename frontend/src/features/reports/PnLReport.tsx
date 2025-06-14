@@ -5,7 +5,7 @@ export const PnLReport = () => {
   const [data, setData] = useState<any>(null);
 
   useEffect(() => {
-    api.get('/reports/pnl').then(res => setData(res.data));
+    apiClient.get('/reports/pnl').then(res => setData(res.data));
   }, []);
 
   if (!data) return <p>Loading Profit & Loss...</p>;

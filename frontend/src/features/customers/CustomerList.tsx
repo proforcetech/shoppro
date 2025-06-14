@@ -28,7 +28,7 @@ export const CustomerList = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
 
   useEffect(() => {
-    api.get('/customers').then(res => {
+    apiClient.get('/customers').then(res => {
       // Optional: You can add type assertion if your api client isn't strongly typed
       // setCustomers(res.data as Customer[]);
       setCustomers(res.data);

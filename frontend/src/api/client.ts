@@ -1,9 +1,8 @@
-// proforcetech/shoppro/shoppro-06bf0ed64f7d8a05ba37c69644472fc852ae8c80/frontend/src/api/client.ts
 
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: '/',
+  baseURL: '/api',
   headers: {
     'Content-Type': 'application/json',
   },

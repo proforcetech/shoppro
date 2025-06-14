@@ -5,11 +5,11 @@ export const PreferencesForm = () => {
   const [prefs, setPrefs] = useState({ backupEnabled: false, terms: '' });
 
   useEffect(() => {
-    api.get('/settings').then(res => setPrefs(res.data));
+    apiClient.get('/settings').then(res => setPrefs(res.data));
   }, []);
 
   const save = async () => {
-    await api.patch('/settings', prefs);
+    await apiClient.patch('/settings', prefs);
     alert('Preferences updated!');
   };
 

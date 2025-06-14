@@ -9,7 +9,7 @@ export const TechPerformanceChart = () => {
   const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
-    api.get('/analytics/tech').then(res => setData(res.data));
+    apiClient.get('/analytics/tech').then(res => setData(res.data));
   }, []);
 
   const chartData = {

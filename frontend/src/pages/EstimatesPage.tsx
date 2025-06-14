@@ -1,4 +1,4 @@
-import { EstimateForm } from '../features/estimates/EstimateForm';
+import EstimateForm from '../features/estimates/EstimateForm';
 import { EstimateList } from '../features/estimates/EstimateList';
 
 export const EstimatesPage = () => {

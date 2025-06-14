@@ -36,6 +36,7 @@
     "dotenv": "^16.5.0",
     "glob": "11.0.2",
     "jsonwebtoken": "^9.0.2",
+    "node": "^24.0.0",
     "nodemailer": "^7.0.3",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
@@ -73,7 +74,7 @@
     "vite": "^6.3.5"
   },
   "engines": {
-    "node": ">=24.0.0"
+    "node": ">=24.2.0"
   },
   "license": "MIT"
 }

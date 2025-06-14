@@ -1,49 +1,48 @@
-import { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import apiClient from '../../api/client';
+import { useAuth } from '../../context/AuthContext';
+import { User } from '../../types';
 
-type UserType = {
-  id: string;
-  email: string;
-  role: 'ADMIN' | 'MANAGER' | 'TECHNICIAN' | 'ACCOUNTANT' | 'FRONT_DESK';
-};
-
-export const RoleManager = () => {
-  const [users, setUsers] = useState<UserType[]>([]);
+const RoleManager = () => {
+  const [users, setUsers] = useState<User[]>([]);
+  const { user: currentUser } = useAuth();
 
   useEffect(() => {
-    api.get('/users').then(res => setUsers(res.data));
+    apiClient.get('/users').then(res => setUsers(res.data));
   }, []);
 
-  const updateRole = async (id: string, role: UserType['role']) => {
-    await api.patch(`/users/${id}/role`, { role });
-    const updated = users.map(u => u.id === id ? { ...u, role } : u);
-    setUsers(updated);
+  const canManage = (targetUser: User): boolean => {
+    if (currentUser?.role !== 'MANAGER') return true; // Admins can manage anyone
+    // Managers cannot manage ADMINs or ACCOUNTANTs
+    return targetUser.role !== 'ADMIN' && targetUser.role !== 'ACCOUNTANT';
   };
 
   return (
-    <div className="bg-white p-4 rounded shadow-sm space-y-4">
-      <h2 className="text-xl font-semibold">User Role Manager</h2>
-      {users.map(u => (
-        <div key={u.id} className="flex items-center justify-between border-b py-2">
-          <div>
-            <p className="font-medium">{u.email}</p>
-            <p className="text-xs text-gray-500">Current: {u.role}</p>
-          </div>
-          <select
-            value={u.role}
-            onChange={e =>
-              updateRole(u.id, e.target.value as UserType['role'])
-            }
-            className="border px-2 py-1 rounded"
-          >
-            <option value="ADMIN">Admin</option>
-            <option value="MANAGER">Manager</option>
-            <option value="TECHNICIAN">Technician</option>
-            <option value="ACCOUNTANT">Accountant</option>
-            <option value="FRONT_DESK">Front Desk</option>
-          </select>
-        </div>
-      ))}
+    <div className="bg-white p-4 rounded shadow-md">
+      <h3 className="font-bold mb-2">Manage User Roles</h3>
+      <ul className="space-y-2">
+        {users.map(user => (
+          <li key={user.id} className="flex justify-between items-center">
+            <span>{user.email} - <span className="font-semibold">{user.role}</span></span>
+            <div>
+              <button 
+                className="btn btn-sm bg-gray-200 mr-2 disabled:opacity-50"
+                disabled={!canManage(user)}
+              >
+                Edit
+              </button>
+              <button 
+                className="btn btn-sm bg-red-500 text-white disabled:opacity-50"
+                disabled={!canManage(user)}
+              >
+                Delete
+              </button>
+            </div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
+
+export default RoleManager;

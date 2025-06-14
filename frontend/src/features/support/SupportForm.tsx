@@ -6,7 +6,7 @@ export const SupportForm = () => {
   const [form, setForm] = useState({ subject: '', message: '' });
 
   const submit = async () => {
-    await api.post('/support', form);
+    await apiClient.post('/support', form);
     alert('Support request sent!');
     setForm({ subject: '', message: '' });
   };

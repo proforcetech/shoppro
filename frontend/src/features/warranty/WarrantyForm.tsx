@@ -6,14 +6,14 @@ export const WarrantyForm = () => {
   const [form, setForm] = useState({ invoiceId: '', issue: '' });
 
   useEffect(() => {
-    api.get('/invoices').then(res => {
+    apiClient.get('/invoices').then(res => {
       const completed = res.data.filter((inv: any) => inv.status === 'PAID');
       setInvoices(completed);
     });
   }, []);
 
   const submit = async () => {
-    await api.post('/warranty', form);
+    await apiClient.post('/warranty', form);
     alert('Warranty claim submitted!');
     setForm({ invoiceId: '', issue: '' });
   };

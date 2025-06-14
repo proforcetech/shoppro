@@ -14,7 +14,7 @@ export const ShopKPIs = () => {
   const [data, setData] = useState<ShopAnalytics | null>(null);
 
   useEffect(() => {
-    api.get<ShopAnalytics>('/analytics/shop').then(res => setData(res.data));
+    apiClient.get<ShopAnalytics>('/analytics/shop').then(res => setData(res.data));
   }, []);
 
   if (!data) return <p>Loading shop KPIs...</p>;
