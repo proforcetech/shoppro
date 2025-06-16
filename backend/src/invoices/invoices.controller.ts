@@ -128,7 +128,7 @@ export class InvoicesController {
     if (typeof this.emailService.sendInvoicePdf !== 'function') {
       throw new Error('sendInvoicePdf method is not implemented on EmailService');
     }
-    await this.emailService.sendInvoicePdf(customer.email, absolutePath, customer.name);
+    await this.emailService.sendInvoicePdf(customer.email, absolutePath, customer.firstName, customer.lastName);
 
     res.json({ message: `Invoice emailed to ${customer.email}` });
   }

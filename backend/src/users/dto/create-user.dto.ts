@@ -6,12 +6,21 @@ export class CreateUserDto {
   email: string;
 
   @IsString()
-  @MinLength(3)
-  name: string;
+  @MinLength(1)
+  firstName: string;
+
+  @IsString()
+  @MinLength(1)
+  lastName: string;
+
 
   @IsString()
   @MinLength(6)
   password: string;
+
+  @IsString()
+  @IsOptional()
+  phone?: string;
 
   @IsEnum(Role)
   role: Role;

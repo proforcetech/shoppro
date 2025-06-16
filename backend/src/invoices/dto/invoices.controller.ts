@@ -72,26 +72,22 @@ export class InvoicesController {
   }
 
   @Post(':id/email')
-  async sendInvoiceEmail(@Param('id') id: string, @Res() res: Response) {
+  async sendEmail(@Param('id') id: string) {
     const invoice = await this.invoicesService.findOne(id);
-    if (!invoice) throw new NotFoundException('Invoice not found');
+    if (!invoice || !invoice.customer) {
+      throw new NotFoundException('Invoice or customer not found');
+    }
+    const { customer } = invoice;
+    const pdfPath = await this.pdfService.generateInvoice(invoice);
+    const absolutePath = path.resolve(pdfPath);
 
-    const estimate = await this.prisma.estimate.findUnique({ where: { id: invoice.estimateId } });
-    if (!estimate) throw new NotFoundException('Estimate not found');
+    // Combine first and last name into a single string
+    const customerName = `${customer.firstName} ${customer.lastName}`.trim();
 
-    const vehicle = await this.prisma.vehicle.findUnique({ where: { id: estimate.vehicleId } });
-    if (!vehicle) throw new NotFoundException('Vehicle not found');
+    // Call the email service with the correct 3 arguments
+    await this.emailService.sendInvoicePdf(customer.email, absolutePath, customerName);
 
-    const customer = await this.prisma.customer.findUnique({ where: { id: vehicle.customerId } });
-    if (!customer) throw new NotFoundException('Customer not found');
-
-    const pdfPath = await this.pdfService.generateInvoice(invoice, estimate, customer, vehicle);
-    const absolutePath = `public/${pdfPath.split('/').pop()}`;
-
-    // -- You must implement this in your EmailService --
-    await this.emailService.sendInvoicePdf(customer.email, absolutePath, customer.name);
-
-    res.json({ message: `Invoice emailed to ${customer.email}` });
+    return { message: 'Invoice emailed successfully' };
   }
 
   @Delete(':id')

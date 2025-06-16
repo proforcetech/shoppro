@@ -1,44 +1,42 @@
-import {
-  IsUUID,
-  IsArray,
-  IsEnum,
-  ValidateNested,
-  IsOptional
-} from 'class-validator';
 import { Type } from 'class-transformer';
+import { IsString, IsNumber, IsArray, ValidateNested, IsOptional, IsBoolean } from 'class-validator';
 
-export enum EstimateStatus {
-  DRAFT = 'DRAFT',
-  APPROVED = 'APPROVED',
-  REJECTED = 'REJECTED',
-}
+class PartDto {
+  @IsString()
+  part: string;
 
-class PartItemDto {
-  @IsUUID()
-  partId: string;
-
+  @IsString()
   @IsOptional()
-  qty?: number;
+  sku?: string;
 
-  @IsOptional()
-  warrantyMonths?: number;
+  @IsNumber()
+  qty: number;
+
+  @IsNumber()
+  pricePerUnit: number;
 }
 
 class JobDto {
+  @IsString()
+  laborDescription: string;
+
+  @IsNumber()
+  laborRate: number;
+
+  @IsNumber()
+  laborTime: number;
+
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => PartItemDto)
-  parts: PartItemDto[];
-
-  description: string;
-
-  laborHours: number;
-
-  rate: number;
+  @Type(() => PartDto)
+  parts: PartDto[];
 }
 
 export class CreateEstimateDto {
-  @IsUUID()
+  @IsString()
+  customerId: string;
+
+  @IsString()
   vehicleId: string;
 
   @IsArray()
@@ -46,8 +44,38 @@ export class CreateEstimateDto {
   @Type(() => JobDto)
   jobs: JobDto[];
 
+  @IsNumber()
   @IsOptional()
-  @IsEnum(EstimateStatus)
-  status?: EstimateStatus;
+  shopFee?: number;
+
+  @IsNumber()
+  @IsOptional()
+  hazardousDisposalFee?: number;
+
+  @IsBoolean()
+  @IsOptional()
+  isMobile?: boolean;
+
+  @IsString()
+  @IsOptional()
+  serviceLocation?: string;
+
+  @IsNumber()
+  @IsOptional()
+  calloutFee?: number;
+
+  @IsNumber()
+  @IsOptional()
+  mileage?: number;
+
+  @IsNumber()
+  @IsOptional()
+  mileageRate?: number;
+
+  @IsBoolean()
+  isTaxable: boolean;
+  
+  @IsNumber()
+  taxRate: number;
 }
 

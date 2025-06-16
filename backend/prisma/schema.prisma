@@ -60,12 +60,12 @@ enum EntryType {
 
 model User {
   id        String   @id @default(uuid())
-  firstName      String?
-  lastName      String?
+  firstName String?
+  lastName  String?
   phone     String?
   email     String   @unique
   password  String
-  role      Role     
+  role      Role
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -97,6 +97,7 @@ model Customer {
   vehicles  Vehicle[]
   logs      CommunicationLog[]
   createdAt DateTime           @default(now())
+  Estimate  Estimate[]
 }
 
 model Vehicle {
@@ -141,15 +142,65 @@ model VehicleHistory {
 //
 
 model Estimate {
-  id        String         @id @default(uuid())
-  vehicleId String
-  vehicle   Vehicle        @relation(fields: [vehicleId], references: [id])
-  jobs      EstimateJob[]
-  status    EstimateStatus
-  approved  Boolean        @default(false)
-  createdAt DateTime       @default(now())
+  id                   String   @id @default(cuid())
+  status               String   @default("DRAFT")
+  subTotal             Float
+  shopFee              Float?
+  hazardousDisposalFee Float?
+  isMobile             Boolean  @default(false)
+  serviceLocation      String?
+  calloutFee           Float?
+  mileage              Float?
+  mileageRate          Float?
+  feeTotal             Float?
+  isTaxable            Boolean  @default(true)
+  taxRate              Float?
+  taxTotal             Float?
+  total                Float
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
 
-  invoice Invoice?
+  // Relations
+  jobs        Job[]
+  customerId  String
+  customer    Customer      @relation(fields: [customerId], references: [id])
+  vehicleId   String
+  vehicle     Vehicle       @relation(fields: [vehicleId], references: [id])
+  EstimateJob EstimateJob[]
+  Invoice     Invoice?
+}
+
+model Job {
+  id               String @id @default(cuid())
+  laborDescription String
+  laborRate        Float
+  laborTime        Float
+
+  // Relations
+  parts      Part[]
+  estimateId String
+  estimate   Estimate @relation(fields: [estimateId], references: [id])
+}
+
+model Part {
+  id           String  @id @default(cuid())
+  name         String
+  sku          String?
+  quantity     Float
+  pricePerUnit Float
+
+  // Relations
+  jobId    String
+  job      Job        @relation(fields: [jobId], references: [id])
+  PartItem PartItem[]
+}
+
+// New model for storing application settings like tax rates
+model Setting {
+  id          String  @id @default(cuid())
+  key         String  @unique
+  value       String
+  description String?
 }
 
 model EstimateJob {
@@ -170,8 +221,10 @@ model PartItem {
   qty            Int
   warrantyMonths Int?
 
-  estimateJob EstimateJob @relation(fields: [estimateJobId], references: [id])
-  part        Part        @relation(fields: [partId], references: [id])
+  estimateJob     EstimateJob    @relation(fields: [estimateJobId], references: [id])
+  part            Part           @relation(fields: [partId], references: [id])
+  InventoryPart   InventoryPart? @relation(fields: [inventoryPartId], references: [id])
+  inventoryPartId String?
 }
 
 model Invoice {
@@ -203,7 +256,7 @@ model Payment {
 // --- Inventory & Vendors ---
 //
 
-model Part {
+model InventoryPart {
   id          String @id @default(uuid())
   sku         String @unique
   description String
@@ -218,11 +271,11 @@ model Part {
 }
 
 model Vendor {
-  id       String @id @default(uuid())
+  id       String          @id @default(uuid())
   name     String
   contact  String
   leadTime String
-  parts    Part[]
+  parts    InventoryPart[]
 }
 
 //

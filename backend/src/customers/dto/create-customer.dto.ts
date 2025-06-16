@@ -2,7 +2,10 @@ import { IsString, IsEmail, IsOptional } from 'class-validator';
 
 export class CreateCustomerDto {
   @IsString()
-  name: string;
+  firstName: string;
+
+  @IsString()
+  lastName: string;
 
   @IsEmail()
   email: string;
@@ -12,5 +15,21 @@ export class CreateCustomerDto {
 
   @IsString()
   address: string;
+
+  @IsString()
+  city: string;
+
+  @IsString()
+  state: string;
+
+  @IsString()
+  zip: string;
+
+  @IsString()
+  emailPref: number;
+
+  @IsString()
+  smsPref: number;
+
 }
 

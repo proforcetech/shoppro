@@ -1,0 +1,43 @@
+:-'		
+
+
+	
+
+	
+
+	
+(  rate: number;
+}(  rate: number;
+}
+
+export class CreateEstimateDto {
+  @IsUUID()
+  vehicleId: string;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => JobDto)
+  jobs: JobDto[];
+
+  @IsOptional()
+  @IsEnum(EstimateStatus)
+  status?: EstimateStatus;
+}
+
+
+
+
+export class 	CreateEstimateDto {
+  @IsUUID()
+  vehicleId: string;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => JobDto)
+  jobs: JobDto[];
+
+  @IsOptional()
+  @IsEnum(EstimateStatus)
+  status?: EstimateStatus;
+}
+

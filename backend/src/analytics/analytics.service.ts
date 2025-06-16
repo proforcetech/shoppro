@@ -33,7 +33,7 @@ export class AnalyticsService {
         totalLabor += job.laborHours * job.rate;
 
         for (const p of job.parts) {
-          totalParts += p.qty * p.part.price;
+          totalParts += p.quantity * p.part.price;
         }
       }
     }
@@ -73,16 +73,16 @@ export class AnalyticsService {
     const parts = await this.prisma.part.findMany();
     const turnoverThreshold = 2;
 
-    const deadStock = parts.filter(p => p.qty > 0 && p.qty > 5); // simplistic rule
+    const deadStock = parts.filter(p => p.quantity > 0 && p.quantity > 5); // simplistic rule
     const turnover = parts.map(p => ({
       sku: p.sku,
-      qty: p.qty,
+      quantity: p.quantity,
       turnoverRate: (Math.random() * 5).toFixed(2), // mock for now
     }));
 
     return {
       turnover,
-      deadStock: deadStock.map(p => ({ sku: p.sku, qty: p.qty })),
+      deadStock: deadStock.map(p => ({ sku: p.sku, quantity: p.quantity })),
     };
   }
 }

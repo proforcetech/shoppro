@@ -9,9 +9,14 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    const { firstName, lastName, ...restOfDto } = createUserDto;
+    
     return this.prisma.user.create({
       data: {
-        ...createUserDto,
+        ...restOfDto,
+        firstName: firstName,
+        lastName: lastName,
+        phone: phone,
         password: hashedPassword,
       },
     });
@@ -23,23 +28,21 @@ export class UsersService {
     });
   }
 
-  // --- ADDED METHODS START HERE ---
-
   async findAll() {
-    // Find all users but exclude their passwords from the result for security
     return this.prisma.user.findMany({
-select: {
-     id: true,
-     email: true,
-     name: true, // Use the correct field 'name'
-     role: true,
-     phone: true,
-   },
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        role: true,
+        phone: true,
+      },
     });
   }
 
+  // Expect the ID as a string
   async update(id: string, updateUserDto: any) {
-    // If a new password is provided, hash it before updating
     if (updateUserDto.password) {
       updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
     }
@@ -49,11 +52,10 @@ select: {
     });
   }
 
+  // Expect the ID as a string
   async remove(id: string) {
     return this.prisma.user.delete({
       where: { id },
     });
   }
-
-  // --- ADDED METHODS END HERE ---
 }
