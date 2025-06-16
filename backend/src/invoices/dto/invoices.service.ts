@@ -42,11 +42,29 @@ export class InvoicesService {
     });
   }
 
-  findOne(id: string) {
-    return this.prisma.invoice.findUnique({
+  async findOne(id: string) {
+    const invoice = await this.prisma.invoice.findUnique({
       where: { id },
-      include: { payments: true, estimate: true },
+      include: {
+        payments: true,
+        // Nest the include to fetch relations of the estimate
+        estimate: {
+          include: {
+            customer: true,
+            vehicle: true,
+            jobs: {
+              include: {
+                parts: true,
+              },
+            },
+          },
+        },
+      },
     });
+    if (!invoice) {
+      throw new NotFoundException(`Invoice with ID "${id}" not found`);
+    }
+    return invoice;
   }
 
   update(id: string, data: UpdateInvoiceDto) {

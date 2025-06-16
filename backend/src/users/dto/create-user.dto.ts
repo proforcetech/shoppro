@@ -13,14 +13,13 @@ export class CreateUserDto {
   @MinLength(1)
   lastName: string;
 
-
   @IsString()
   @MinLength(6)
   password: string;
 
   @IsString()
   @IsOptional()
-  phone?: string;
+  phone: string;
 
   @IsEnum(Role)
   role: Role;

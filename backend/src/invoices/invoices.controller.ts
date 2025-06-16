@@ -12,6 +12,7 @@ import { Roles } from '../auth/role.decorator';
 import { PdfService } from '../pdf/pdf.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { EmailService } from '../email/email.service';
+import * as path from 'path';
 
 @Controller('invoices')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -93,43 +94,20 @@ export class InvoicesController {
   }
 
   @Post(':id/email')
-  @Roles('FRONT_DESK')
-  async sendInvoiceEmail(@Param('id') id: string, @Res() res: Response) {
+  @Roles('ADMIN', 'MANAGER')
+  async sendEmail(@Param('id') id: string) {
     const invoice = await this.invoicesService.findOne(id);
-    if (!invoice) throw new NotFoundException('Invoice not found');
+    if (!invoice?.customer) throw new NotFoundException('Invoice or customer not found');
+    
+    // The customer is now directly on the invoice object
+    const { customer, estimate } = invoice;
+    const customerName = customer.name;
+    const vehicle = estimate?.vehicle; // vehicle is on the nested estimate
 
-    const estimate = await this.prisma.estimate.findUnique({
-      where: { id: invoice.estimateId },
-      include: {
-        jobs: {
-          include: {
-            parts: {
-              include: { part: true },
-            },
-          },
-        },
-      },
-    });
-    if (!estimate) throw new NotFoundException('Estimate not found');
+    const pdfPath = await this.pdfService.generateInvoice(invoice, estimate, customer, vehicle);
+    const absolutePath = path.resolve(pdfPath);
+    await this.emailService.sendInvoicePdf(customer.email, absolutePath, customerName);
 
-    const vehicle = await this.prisma.vehicle.findUnique({
-      where: { id: estimate.vehicleId },
-    });
-    if (!vehicle) throw new NotFoundException('Vehicle not found');
-
-    const customer = await this.prisma.customer.findUnique({
-      where: { id: vehicle.customerId },
-    });
-    if (!customer) throw new NotFoundException('Customer not found');
-
-    const pdfUrl = await this.pdfService.generateInvoice(invoice, estimate, customer, vehicle);
-    const absolutePath = `public/${pdfUrl.split('/').pop()}`;
-
-    if (typeof this.emailService.sendInvoicePdf !== 'function') {
-      throw new Error('sendInvoicePdf method is not implemented on EmailService');
-    }
-    await this.emailService.sendInvoicePdf(customer.email, absolutePath, customer.firstName, customer.lastName);
-
-    res.json({ message: `Invoice emailed to ${customer.email}` });
+    return { message: 'Invoice emailed successfully' };
   }
 }
