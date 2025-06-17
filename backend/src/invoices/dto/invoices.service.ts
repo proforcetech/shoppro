@@ -19,17 +19,19 @@ export class InvoicesService {
     }
 
     const laborTotal = estimate.jobs.reduce((sum, job) => sum + job.laborHours * job.rate, 0);
-    const parts = await this.prisma.partItem.findMany({
-      where: { estimateJob: { estimateId } },
-      include: { part: true },
+    // Assuming 'partItem' is a typo and should be 'Part' related to jobs
+    // This part of the calculation might need adjustment based on your final schema
+    const partsInJobs = await this.prisma.part.findMany({
+        where: { job: { estimateId: estimateId } }
     });
 
-    const partsTotal = parts.reduce((sum, item) => sum + item.qty * item.part.price, 0);
+    const partsTotal = partsInJobs.reduce((sum, part) => sum + part.quantity * part.price, 0);
     const total = laborTotal + partsTotal;
 
     return this.prisma.invoice.create({
       data: {
         estimateId,
+        customerId: estimate.customerId, // Add the customerId from the estimate
         total,
         status: 'DRAFT',
       },
@@ -47,7 +49,6 @@ export class InvoicesService {
       where: { id },
       include: {
         payments: true,
-        // Nest the include to fetch relations of the estimate
         estimate: {
           include: {
             customer: true,
@@ -103,4 +104,3 @@ export class InvoicesService {
     return this.prisma.invoice.delete({ where: { id } });
   }
 }
-

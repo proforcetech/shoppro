@@ -1,3 +1,4 @@
+// proforcetech/shoppro/shoppro-1cc1d64782376e31373230bb4600be0de6b08939/backend/src/estimates/estimates.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateEstimateDto } from './dto/create-estimate.dto';
@@ -8,12 +9,33 @@ export class EstimatesService {
 
   async create(createEstimateDto: CreateEstimateDto) {
     const { jobs, ...rest } = createEstimateDto;
-    // All calculations are now handled on the frontend for simplicity of this feature
-    // A production app would re-calculate on the backend for security.
+
+    // --- Start Calculation Logic ---
+    let calculatedSubTotal = 0;
+    for (const job of jobs) {
+      const laborTotal = job.laborTime * job.laborRate;
+      const partsTotal = job.parts.reduce((acc, part) => acc + (part.qty * part.pricePerUnit), 0);
+      calculatedSubTotal += laborTotal + partsTotal;
+    }
+
+    const shopFee = rest.shopFee || 0;
+    const hazardousDisposalFee = rest.hazardousDisposalFee || 0;
+    const calloutFee = rest.calloutFee || 0;
+    const mileageCharge = (rest.mileage || 0) * (rest.mileageRate || 0);
+    
+    let calculatedTotal = calculatedSubTotal + shopFee + hazardousDisposalFee + calloutFee + mileageCharge;
+    
+    if (rest.isTaxable) {
+      const taxAmount = calculatedTotal * (rest.taxRate / 100);
+      calculatedTotal += taxAmount;
+    }
+    // --- End Calculation Logic ---
 
     return this.prisma.estimate.create({
       data: {
         ...rest,
+        subTotal: calculatedSubTotal, // Add calculated subTotal
+        total: calculatedTotal,       // Add calculated total
         jobs: {
           create: jobs.map(job => ({
             description: job.laborDescription,
@@ -24,7 +46,8 @@ export class EstimatesService {
                 description: part.part,
                 sku: part.sku,
                 quantity: part.qty,
-                pricePerUnit: part.pricePerUnit,
+                price: part.pricePerUnit,
+                cost: 0, 
               })),
             },
           })),

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreatePartDto } from './dto/create-part.dto';
 import { UpdatePartDto } from './dto/update-part.dto';
@@ -12,13 +12,29 @@ export class InventoryService {
   // === Parts Logic ===
 
   findAllParts() {
-    // Corrected: The relation is 'Vendor' (uppercase V)
     return this.prisma.part.findMany({ include: { Vendor: true } });
   }
 
   createPart(createPartDto: CreatePartDto) {
-    // Corrected: The DTO properties now match the schema
-    return this.prisma.part.create({ data: createPartDto });
+    // The database schema requires a `jobId` for every part.
+    // This is likely not the desired behavior for creating general inventory parts.
+    // The best long-term solution is to make `jobId` optional in `schema.prisma`.
+    
+    // This code provides a temporary, type-safe workaround.
+    const { jobId, ...partData } = createPartDto;
+
+    if (!jobId) {
+      // Throw an error because the database constraint cannot be met.
+      throw new BadRequestException('A required "jobId" was not provided to create the part due to a database constraint.');
+    }
+    
+    // We now know jobId is a string, so we can safely create the record.
+    return this.prisma.part.create({ 
+      data: {
+        ...partData,
+        jobId: jobId,
+      } 
+    });
   }
 
   updatePart(id: string, updatePartDto: UpdatePartDto) {
@@ -33,16 +49,14 @@ export class InventoryService {
   }
 
   findLowStock(minThreshold: number) {
-    // Corrected: The field is 'quantity'
     return this.prisma.part.findMany({
       where: { quantity: { lt: minThreshold } },
       include: { Vendor: true },
     });
   }
   
-  // Aliased reorderCheck to findLowStock for clarity
   reorderCheck() {
-    const REORDER_THRESHOLD = 10; // Or get from settings
+    const REORDER_THRESHOLD = 10;
     return this.findLowStock(REORDER_THRESHOLD);
   }
 
@@ -51,7 +65,7 @@ export class InventoryService {
   findAllVendors() {
     return this.prisma.vendor.findMany();
   }
-  // aliased getVendors to findAllVendors
+  
   getVendors() {
     return this.findAllVendors();
   }

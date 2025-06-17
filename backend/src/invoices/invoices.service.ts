@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
+import { UpdateInvoiceDto } from './dto/update-invoice.dto';
+import { AddPaymentDto } from './dto/add-payment.dto';
 
 @Injectable()
 export class InvoicesService {
@@ -21,7 +23,7 @@ export class InvoicesService {
       },
     });
   }
-  
+
   async findOne(id: string) {
     const invoice = await this.prisma.invoice.findUnique({
       where: { id },
@@ -34,10 +36,21 @@ export class InvoicesService {
     if (!invoice) throw new NotFoundException(`Invoice with ID "${id}" not found`);
     return invoice;
   }
-  
+
   findAll() {
     return this.prisma.invoice.findMany({ include: { customer: true } });
   }
-  
-  // Other methods (update, remove, addPayment) would go here
+
+  async update(id: string, dto: UpdateInvoiceDto) {
+    return this.prisma.invoice.update({ where: { id }, data: dto });
+  }
+
+  async addPayment(dto: AddPaymentDto) {
+    // Basic implementation
+    return this.prisma.payment.create({ data: dto });
+  }
+
+  async remove(id: string) {
+    return this.prisma.invoice.delete({ where: { id } });
+  }
 }

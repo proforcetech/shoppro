@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsEnum, IsString, MinLength, IsOptional } from 'class-validator';
 import { Role } from '../../auth/role.enum';
 
 export class CreateUserDto {

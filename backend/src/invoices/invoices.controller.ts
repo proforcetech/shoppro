@@ -12,7 +12,7 @@ import { Roles } from '../auth/role.decorator';
 import { PdfService } from '../pdf/pdf.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { EmailService } from '../email/email.service';
-import * as path from 'path';
+import * as path from 'path'; // Import path module
 
 @Controller('invoices')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -59,53 +59,47 @@ export class InvoicesController {
     return this.invoicesService.remove(id);
   }
 
-  @Get(':id/pdf')
+@Get(':id/pdf')
   @Roles('FRONT_DESK')
   async generatePdf(@Param('id') id: string, @Res() res: Response) {
     const invoice = await this.invoicesService.findOne(id);
     if (!invoice) throw new NotFoundException('Invoice not found');
 
-    const estimate = await this.prisma.estimate.findUnique({
-      where: { id: invoice.estimateId },
-      include: {
-        jobs: {
-          include: {
-            parts: {
-              include: { part: true },
-            },
-          },
-        },
-      },
-    });
-    if (!estimate) throw new NotFoundException('Estimate not found');
+    const { estimate, customer } = invoice;
+    const vehicle = estimate?.vehicle;
 
-    const vehicle = await this.prisma.vehicle.findUnique({
-      where: { id: estimate.vehicleId },
-    });
-    if (!vehicle) throw new NotFoundException('Vehicle not found');
-
-    const customer = await this.prisma.customer.findUnique({
-      where: { id: vehicle.customerId },
-    });
-    if (!customer) throw new NotFoundException('Customer not found');
+    if (!estimate || !customer || !vehicle) {
+      throw new NotFoundException('Estimate, customer, or vehicle not found for this invoice.');
+    }
 
     const pdfUrl = await this.pdfService.generateInvoice(invoice, estimate, customer, vehicle);
-    res.download(`public/${pdfUrl.split('/').pop()}`);
+    res.download(path.resolve(`public/${pdfUrl.split('/').pop()}`));
   }
 
-  @Post(':id/email')
+ @Post(':id/email')
   @Roles('ADMIN', 'MANAGER')
   async sendEmail(@Param('id') id: string) {
     const invoice = await this.invoicesService.findOne(id);
-    if (!invoice?.customer) throw new NotFoundException('Invoice or customer not found');
-    
-    // The customer is now directly on the invoice object
-    const { customer, estimate } = invoice;
-    const customerName = customer.name;
-    const vehicle = estimate?.vehicle; // vehicle is on the nested estimate
+    // Use optional chaining and check for customer
+    if (!invoice?.customer) {
+        throw new NotFoundException('Invoice or customer not found');
+    }
 
+    // Destructure customer and estimate from the invoice object
+    const { customer, estimate } = invoice;
+    const vehicle = estimate?.vehicle;
+
+    if (!estimate || !vehicle) {
+        throw new NotFoundException('Estimate or vehicle not found for this invoice.');
+    }
+    
+    // Combine names for the email
+    const customerName = `${customer.firstName} ${customer.lastName}`.trim();
+
+    // Correctly call generateInvoice with all 4 required arguments
     const pdfPath = await this.pdfService.generateInvoice(invoice, estimate, customer, vehicle);
     const absolutePath = path.resolve(pdfPath);
+
     await this.emailService.sendInvoicePdf(customer.email, absolutePath, customerName);
 
     return { message: 'Invoice emailed successfully' };

@@ -8,9 +8,18 @@ export class SchedulingService {
   constructor(private prisma: PrismaService) {}
 
   async create(dto: CreateAppointmentDto) {
+    const technician = await this.prisma.technician.findUnique({
+      where: { id: dto.techId },
+    });
+
+    if (!technician) {
+      throw new NotFoundException(`Technician with ID "${dto.techId}" not found`);
+    }
+
     return this.prisma.appointment.create({
       data: {
         ...dto,
+        userId: technician.userId, // Add the userId from the technician
         status: 'SCHEDULED',
       },
     });

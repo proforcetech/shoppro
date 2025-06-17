@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsUUID } from 'class-validator';
+import { IsString, IsNumber, IsUUID, IsOptional } from 'class-validator';
 
 export class CreatePartDto {
   @IsString()
@@ -14,12 +14,15 @@ export class CreatePartDto {
   price: number;
 
   @IsNumber()
-  qty: number;
+  quantity: number; // Renamed from qty
 
   @IsString()
   location: string;
 
   @IsUUID()
   vendorId: string;
-}
 
+  @IsString()
+  @IsOptional()
+  jobId?: string; // Added optional jobId
+}
