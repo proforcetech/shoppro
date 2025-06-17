@@ -22,7 +22,7 @@ export class AnalyticsService {
             include: {
               parts: {
                 include: {
-                  part: true,
+                  parts: true,
                 },
               },
             },
@@ -30,7 +30,7 @@ export class AnalyticsService {
         },
       });
 
-      if (estimate) { // Check if estimate exists
+      if (estimate?.jobs) { // Check if estimate exists
         for (const job of estimate.jobs) {
           totalLabor += job.laborHours * job.rate;
 

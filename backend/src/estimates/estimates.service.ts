@@ -1,4 +1,3 @@
-// proforcetech/shoppro/shoppro-1cc1d64782376e31373230bb4600be0de6b08939/backend/src/estimates/estimates.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateEstimateDto } from './dto/create-estimate.dto';
