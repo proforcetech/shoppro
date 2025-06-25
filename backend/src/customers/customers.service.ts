@@ -2,20 +2,57 @@ import { Injectable } from '@nestjs/common';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { Prisma } from '@prisma/client'; // Import the Prisma namespace
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class CustomersService {
   constructor(private prisma: PrismaService) {}
+
   create(createCustomerDto: CreateCustomerDto) {
-    // Note: The CreateCustomerDto may need to be updated to accept firstName and lastName
     return this.prisma.customer.create({ data: createCustomerDto });
   }
 
-  findAll() {
-    return this.prisma.customer.findMany({ include: { vehicles: true } });
-  }
+  /**
+   * Finds all customers with pagination and search capabilities.
+   * @param params - Object containing search, page, and limit parameters.
+   * @returns A paginated list of customers and total count.
+   */
+  async findAll(params: { search?: string; page?: number; limit?: number }) {
+    const { search, page = 1, limit = 10 } = params;
+    const skip = (page - 1) * limit;
 
+    const where: Prisma.CustomerWhereInput = search
+      ? {
+          OR: [
+            { firstName: { contains: search, mode: 'insensitive' } },
+            { lastName: { contains: search, mode: 'insensitive' } },
+            { email: { contains: search, mode: 'insensitive' } },
+          ],
+        }
+      : {};
+
+    // Use a transaction to get both data and count efficiently
+    const [customers, totalCustomers] = await this.prisma.$transaction([
+      this.prisma.customer.findMany({
+        where,
+        skip,
+        take: limit,
+        include: { vehicles: true },
+        orderBy: {
+          lastName: 'asc',
+        },
+      }),
+      this.prisma.customer.count({ where }),
+    ]);
+
+    return {
+      data: customers,
+      total: totalCustomers,
+      currentPage: page,
+      totalPages: Math.ceil(totalCustomers / limit),
+    };
+  }
+  
   findOne(id: string) {
     return this.prisma.customer.findUnique({
       where: { id },
@@ -23,12 +60,6 @@ export class CustomersService {
     });
   }
 
-  /**
-   * Searches for customers by first or last name, case-insensitively.
-   * Can handle multi-word searches.
-   * @param {string} name - The search query for the customer's name.
-   * @returns A promise that resolves to a list of matching customers with their vehicles.
-   */
   async searchByName(name: string) {
     if (!name || name.trim() === '') {
       return [];
@@ -36,8 +67,8 @@ export class CustomersService {
     const nameParts = name.trim().split(' ').filter(p => p);
 
     const searchConditions = nameParts.flatMap(part => ([
-        { firstName: { contains: part, mode: Prisma.QueryMode.insensitive } }, // Corrected: Use Prisma.QueryMode
-        { lastName: { contains: part, mode: Prisma.QueryMode.insensitive } },  // Corrected: Use Prisma.QueryMode
+        { firstName: { contains: part, mode: Prisma.QueryMode.insensitive } },
+        { lastName: { contains: part, mode: Prisma.QueryMode.insensitive } },
     ]));
 
     return this.prisma.customer.findMany({
@@ -52,7 +83,6 @@ export class CustomersService {
   }
 
   update(id: string, updateCustomerDto: UpdateCustomerDto) {
-    // Note: The UpdateCustomerDto may also need updating
     return this.prisma.customer.update({
       where: { id },
       data: updateCustomerDto,

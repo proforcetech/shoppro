@@ -6,12 +6,12 @@ import {
   Patch,
   Param,
   Delete,
-  Query, // Import Query
+  Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CustomersService } from './customers.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
-import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @UseGuards(JwtAuthGuard)
@@ -24,16 +24,27 @@ export class CustomersController {
     return this.customersService.create(createCustomerDto);
   }
 
+  /**
+   * Finds all customers with pagination and search functionality.
+   * @param search - Optional search term to filter customers by name or email.
+   * @param page - Optional page number for pagination (default: 1).
+   * @param limit - Optional number of items per page (default: 10).
+   */
   @Get()
-  findAll() {
-    return this.customersService.findAll();
+  findAll(
+    @Query('search') search?: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    const pageNumber = page ? parseInt(page, 10) : 1;
+    const limitNumber = limit ? parseInt(limit, 10) : 10;
+    return this.customersService.findAll({
+      search,
+      page: pageNumber,
+      limit: limitNumber,
+    });
   }
 
-  /**
-   * New endpoint to search for customers by name.
-   * @param {string} name - The search query for the customer's name.
-   * @returns A list of customers matching the search query.
-   */
   @Get('search')
   searchByName(@Query('name') name: string) {
     return this.customersService.searchByName(name);

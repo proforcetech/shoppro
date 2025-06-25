@@ -4,23 +4,47 @@ import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
 import ProtectedRoute from './router/ProtectedRoute';
 
-import { DefaultLayout } from './layouts/DefaultLayout';
+// Login Page
 import LoginPage from './pages/Login';
-import { Dashboard } from './pages/Dashboard';
-import CustomersPage from './pages/CustomersPage';
-// import { EditCustomerPage } from './pages/EditCustomerPage';
 
+// Dashboard Page
+import { Dashboard } from './pages/Dashboard';
+
+// Layouts
+import { DefaultLayout } from './layouts/DefaultLayout';
+
+// Customer Pages
+import CustomersPage from './pages/CustomersPage';
+import { EditCustomerPage } from './pages/EditCustomerPage';
+
+
+// Estimate Pages
 import EstimatesPage from './pages/EstimatesPage';
+
+// Invoice Pages
 import { InvoicesPage } from './pages/InvoicesPage';
-import { AnalyticsPage } from './pages/AnalyticsPage';
-import { AppointmentsPage } from './pages/AppointmentsPage';
-import SettingsPage from './pages/SettingsPage';
+
+//Analtics and Reports
 import { ReportsPage } from './pages/ReportsPage';
+import { AnalyticsPage } from './pages/AnalyticsPage';
+
+//Appointment Pages
+import { AppointmentsPage } from './pages/AppointmentsPage';
+
+//Support and Warranty
 import { SupportPage } from './pages/SupportPage';
 import { WarrantyClaimsPage } from './pages/WarrantyClaimsPage';
+
+//Misc Pages
 import { NotFound } from './pages/NotFound';
 import { Unauthorized } from './pages/Unauthorized';
+
+//Landing Page
 import { LandingPage } from './pages/LandingPage'; // Import the new landing page
+
+//Settings Page
+import SettingsPage from './pages/SettingsPage';
+
 
 export default function App() {
   return (
