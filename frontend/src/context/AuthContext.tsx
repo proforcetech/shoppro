@@ -1,6 +1,7 @@
-import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
+import type { ReactNode } from 'react';
 import { jwtDecode } from 'jwt-decode';
-import { User, DecodedToken } from '../types';
+import type { User, DecodedToken } from '../types';
 import apiClient from '../api/client';
 import authService from '../features/auth/auth.service';
 
@@ -36,6 +37,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const user: User = {
         id: decoded.sub,
         email: decoded.email,
+        firstName: decoded.firstName,
+        lastName: decoded.lastName,
         role: decoded.role,
       };
       setUser(user);

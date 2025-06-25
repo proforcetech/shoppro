@@ -1,6 +1,34 @@
+export type EstimateFormData = {
+  customerId: string;
+  vehicleId: string;
+  jobs: {
+    laborDescription: string;
+    laborRate: number;
+    laborTime: number;
+    parts: {
+      name: string;
+      sku?: string;
+      quantity: number;
+      pricePerUnit: number;
+    }[];
+  }[];
+  shopFee: number;
+  hazardousDisposalFee: number;
+  isMobile: boolean;
+  serviceLocation: string;
+  calloutFee: number;
+  mileage: number;
+  mileageRate: number;
+  isTaxable: boolean;
+  taxRate: number;
+};
+
+
 export type User = {
   id: string;
   email: string;
+  firstName: string;
+  lastName: string;
   role: string;
 };
 
@@ -8,45 +36,85 @@ export type DecodedToken = {
   sub: string;
   email: string;
   role: string;
+  firstName: string;
+  lastName: string;
   iat: number;
   exp: number;
 };
 
+
+export interface Customer {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
+}
+
+/**
+ * VehicleType now includes all properties that are used in the VehicleList component,
+ * such as mileage, engine, trim, and drive.
+ */
 export type VehicleType = {
   id: string;
   vin: string;
   year: number;
   make: string;
   model: string;
-};
-
-export interface Job {
-  description: string;
-  laborHours: number;
-  rate: number;
-  parts: any[]; // You can define a 'Part' type for better type safety
-}
-
-export type InvoiceType = {
-  id: string;
-  status: string;
-  total: number;
-  payments: any[]; // You can define a 'Payment' type
+  engine: string;
+  trim: string;
+  drive: string;
+  mileage: number;
 };
 
 export type CustomerType = {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
   address: string;
+  city: string;
+  state: string;
+  zip: string;
   vehicles: VehicleType[];
 };
 
-export interface Estimate {
+export interface Vehicle {
   id: string;
-  status: 'DRAFT' | 'APPROVED' | 'REJECTED';
-  vehicle: VehicleType; // An estimate is linked to a single vehicle
+  make: string;
+  model: string;
+  year: number;
+  vin: string;
+  licensePlate: string;
+  customerId: string;
+  mileage: number;
+}
+
+export interface Part {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+}
+
+export interface Job {
+  id?: string;
+  description: string;
+  laborHours: number;
+  rate: number;
+  parts: Part[];
+}
+
+export interface Estimate {
+  id?: string;
+  customerId: string;
+  vehicleId: string;
+  status: 'DRAFT' | 'SENT' | 'APPROVED' | 'DECLINED';
   jobs: Job[];
-  createdAt: string;
+  total?: number;
 }

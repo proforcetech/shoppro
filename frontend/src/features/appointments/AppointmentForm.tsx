@@ -1,12 +1,17 @@
-import React, { useState, useEffect } from 'react';
+// src/features/appointments/AppointmentForm.tsx
+import { useState, useEffect } from 'react';
 import apiClient from '../../api/client';
 import { useToast } from '../../context/ToastContext';
-import { CustomerType } from '../../types'; // Assuming CustomerType is in types
+import type {CustomerType, User } from '../../types';
+
 
 const AppointmentForm = () => {
   const [customerId, setCustomerId] = useState('');
   const [vehicleId, setVehicleId] = useState('');
+//  const [technicianId, setTechnicianId] = useState('');
   const [technicianId, setTechnicianId] = useState('');
+  const [technicians, setTechnicians] = useState<User[]>([]);
+
   const [date, setDate] = useState('');
   const [description, setDescription] = useState('');
   const [customers, setCustomers] = useState<CustomerType[]>([]);
@@ -19,8 +24,9 @@ const AppointmentForm = () => {
       .then(res => setCustomers(res.data))
       .catch(err => console.error("Failed to fetch customers:", err));
     
-    // You would also fetch technicians here similarly
-    // apiClient.get('/users?role=TECHNICIAN').then(res => ...);
+    apiClient.get('/users?role=TECHNICIAN')
+      .then(res => setTechnicians(res.data))
+      .catch(err => console.error("Failed to fetch technicians:", err));
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -57,7 +63,7 @@ const AppointmentForm = () => {
         >
           <option value="">Select a Customer</option>
           {customers.map(customer => (
-            <option key={customer.id} value={customer.id}>{customer.name}</option>
+            <option key={customer.id} value={customer.id}>{customer.firstName} {customer.lastName}</option>
           ))}
         </select>
       </div>
@@ -74,6 +80,19 @@ const AppointmentForm = () => {
           <option value="">Select a Vehicle</option>
           {selectedCustomerVehicles.map(vehicle => (
             <option key={vehicle.id} value={vehicle.id}>{`${vehicle.year} ${vehicle.make} ${vehicle.model}`}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* Technician */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Technician</label>
+        <select value={technicianId}  onChange={e => setTechnicianId(e.target.value)}  className="mt-1 block w-full p-2 border rounded" required  >
+          <option value="">Select a Technician</option>
+          {technicians.map(t => (
+            <option key={t.id} value={t.id}>
+              {t.firstName} {t.lastName}
+            </option>
           ))}
         </select>
       </div>

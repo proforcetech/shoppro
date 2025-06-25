@@ -8,7 +8,9 @@ import { DefaultLayout } from './layouts/DefaultLayout';
 import LoginPage from './pages/Login';
 import { Dashboard } from './pages/Dashboard';
 import CustomersPage from './pages/CustomersPage';
-import { EstimatesPage } from './pages/EstimatesPage';
+// import { EditCustomerPage } from './pages/EditCustomerPage';
+
+import EstimatesPage from './pages/EstimatesPage';
 import { InvoicesPage } from './pages/InvoicesPage';
 import { AnalyticsPage } from './pages/AnalyticsPage';
 import { AppointmentsPage } from './pages/AppointmentsPage';

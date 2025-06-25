@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import apiClient from '../../api/client';
 
 export const PreferencesForm = () => {

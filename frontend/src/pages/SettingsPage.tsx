@@ -1,4 +1,4 @@
-import React from 'react';
+// import type { ReactNode } from 'react';
 import { PreferencesForm } from '../features/settings/PreferencesForm';
 import RoleManager from '../features/settings/RoleManager';
 import UserForm from '../features/settings/UserForm';

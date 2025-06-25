@@ -38,9 +38,12 @@ exports.CreateCustomerDto = void 0;
 var class_validator_1 = require("class-validator");
 var CreateCustomerDto = function () {
     var _a;
-    var _name_decorators;
-    var _name_initializers = [];
-    var _name_extraInitializers = [];
+    var _firstName_decorators;
+    var _firstName_initializers = [];
+    var _firstName_extraInitializers = [];
+    var _lastName_decorators;
+    var _lastName_initializers = [];
+    var _lastName_extraInitializers = [];
     var _email_decorators;
     var _email_initializers = [];
     var _email_extraInitializers = [];
@@ -52,7 +55,8 @@ var CreateCustomerDto = function () {
     var _address_extraInitializers = [];
     return _a = /** @class */ (function () {
             function CreateCustomerDto() {
-                this.name = __runInitializers(this, _name_initializers, void 0);
+                this.firstName = __runInitializers(this, _name_initializers, void 0);
+                this.lastName = __runInitializers(this, _name_initializers, void 0);
                 this.email = (__runInitializers(this, _name_extraInitializers), __runInitializers(this, _email_initializers, void 0));
                 this.phone = (__runInitializers(this, _email_extraInitializers), __runInitializers(this, _phone_initializers, void 0));
                 this.address = (__runInitializers(this, _phone_extraInitializers), __runInitializers(this, _address_initializers, void 0));
@@ -62,11 +66,13 @@ var CreateCustomerDto = function () {
         }()),
         (function () {
             var _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(null) : void 0;
-            _name_decorators = [(0, class_validator_1.IsString)()];
+            _firstName_decorators = [(0, class_validator_1.IsString)()];
+            _lastName_decorators = [(0, class_validator_1.IsString)()];
             _email_decorators = [(0, class_validator_1.IsEmail)()];
             _phone_decorators = [(0, class_validator_1.IsString)()];
             _address_decorators = [(0, class_validator_1.IsString)()];
-            __esDecorate(null, null, _name_decorators, { kind: "field", name: "name", static: false, private: false, access: { has: function (obj) { return "name" in obj; }, get: function (obj) { return obj.name; }, set: function (obj, value) { obj.name = value; } }, metadata: _metadata }, _name_initializers, _name_extraInitializers);
+            __esDecorate(null, null, _name_decorators, { kind: "field", firstName: "first name", static: false, private: false, access: { has: function (obj) { return "firstName" in obj; }, get: function (obj) { return obj.firstName; }, set: function (obj, value) { obj.firstName = value; } }, metadata: _metadata }, _firstName_initializers, _firstName_extraInitializers);
+            __esDecorate(null, null, _name_decorators, { kind: "field", lastName: "last name", static: false, private: false, access: { has: function (obj) { return "lastName" in obj; }, get: function (obj) { return obj.lastName; }, set: function (obj, value) { obj.lastName = value; } }, metadata: _metadata }, _lastName_initializers, _lastName_extraInitializers);
             __esDecorate(null, null, _email_decorators, { kind: "field", name: "email", static: false, private: false, access: { has: function (obj) { return "email" in obj; }, get: function (obj) { return obj.email; }, set: function (obj, value) { obj.email = value; } }, metadata: _metadata }, _email_initializers, _email_extraInitializers);
             __esDecorate(null, null, _phone_decorators, { kind: "field", name: "phone", static: false, private: false, access: { has: function (obj) { return "phone" in obj; }, get: function (obj) { return obj.phone; }, set: function (obj, value) { obj.phone = value; } }, metadata: _metadata }, _phone_initializers, _phone_extraInitializers);
             __esDecorate(null, null, _address_decorators, { kind: "field", name: "address", static: false, private: false, access: { has: function (obj) { return "address" in obj; }, get: function (obj) { return obj.address; }, set: function (obj, value) { obj.address = value; } }, metadata: _metadata }, _address_initializers, _address_extraInitializers);

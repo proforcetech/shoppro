@@ -25,4 +25,9 @@ export class CreatePartDto {
   @IsString()
   @IsOptional()
   jobId?: string; // Added optional jobId
+
+  @IsString()
+  @IsOptional()
+  estimateJobId?: string; // Added optional estimateJobId
+
 }

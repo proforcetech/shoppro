@@ -4,6 +4,7 @@ import { CreatePartDto } from './dto/create-part.dto';
 import { UpdatePartDto } from './dto/update-part.dto';
 import { CreateVendorDto } from './dto/create-vendor.dto';
 import { UpdateVendorDto } from './dto/update-vendor.dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class InventoryService {
@@ -15,27 +16,29 @@ export class InventoryService {
     return this.prisma.part.findMany({ include: { Vendor: true } });
   }
 
-  createPart(createPartDto: CreatePartDto) {
-    // The database schema requires a `jobId` for every part.
-    // This is likely not the desired behavior for creating general inventory parts.
-    // The best long-term solution is to make `jobId` optional in `schema.prisma`.
-    
-    // This code provides a temporary, type-safe workaround.
-    const { jobId, ...partData } = createPartDto;
+async createPart(createPartDto: {
+  description: string;
+  sku?: string;
+  quantity: number;
+  price: number;
+  cost: number;
+  vendorId?: string;
+  estimateJobId?: string;
+}) {
+  const { vendorId, estimateJobId, ...rest } = createPartDto;
 
-    if (!jobId) {
-      // Throw an error because the database constraint cannot be met.
-      throw new BadRequestException('A required "jobId" was not provided to create the part due to a database constraint.');
-    }
-    
-    // We now know jobId is a string, so we can safely create the record.
-    return this.prisma.part.create({ 
-      data: {
-        ...partData,
-        jobId: jobId,
-      } 
-    });
-  }
+  const data: Prisma.PartCreateInput = {
+    ...rest,
+    Vendor: vendorId
+      ? { connect: { id: vendorId } }
+      : undefined,
+    estimateJob: estimateJobId
+      ? { connect: { id: estimateJobId } }
+      : undefined,
+  };
+
+  return this.prisma.part.create({ data });
+}
 
   updatePart(id: string, updatePartDto: UpdatePartDto) {
     return this.prisma.part.update({

@@ -174,7 +174,6 @@ model Job {
 
 model Part {
   id          String   @id @default(cuid())
-  partId      String
   description String
   sku         String?
   quantity    Int
@@ -184,15 +183,22 @@ model Part {
   updatedAt   DateTime @updatedAt
 
   vendorId String?
-  Vendor   Vendor?    @relation(fields: [vendorId], references: [id])
-  jobId    String
-  job      Job?       @relation(fields: [jobId], references: [id])
+  Vendor   Vendor? @relation(fields: [vendorId], references: [id])
+
+  jobId String
+  job   Job?   @relation(fields: [jobId], references: [id])
+
   warrantyMonths Int?
-  estimateJob     EstimateJob    @relation(fields: [estimateJobId], references: [id])
-  part            Part           @relation(fields: [partId], references: [id])
+
+  estimateJobId String?
+  estimateJob   EstimateJob? @relation(fields: [estimateJobId], references: [id])
+
   InventoryPart   InventoryPart? @relation(fields: [inventoryPartId], references: [id])
   inventoryPartId String?
-  parts     Part[]
+
+  partId     String?
+  parentPart Part?   @relation("PartHierarchy", fields: [partId], references: [id])
+  childParts Part[]  @relation("PartHierarchy")
 }
 
 model Setting {
@@ -209,7 +215,7 @@ model EstimateJob {
   laborHours  Float
   rate        Float
 
-  estimate Estimate   @relation(fields: [estimateId], references: [id])
+  estimate Estimate @relation(fields: [estimateId], references: [id])
   parts    Part[]
 }
 
@@ -252,7 +258,7 @@ model InventoryPart {
   location    String
   vendorId    String
 
-  vendor Vendor     @relation(fields: [vendorId], references: [id])
+  vendor Vendor @relation(fields: [vendorId], references: [id])
   items  Part[]
 }
 

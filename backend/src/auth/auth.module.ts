@@ -6,13 +6,13 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
-import { ConfigModule, ConfigService } from '@nestjs/config'; // 1. Import ConfigService
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     UsersModule,
     PassportModule,
-    // 2. Use registerAsync to safely load the secret
+    ConfigModule, // Make sure ConfigModule is imported
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -24,5 +24,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config'; // 1. Import Confi
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy],
+  exports: [AuthService], // Export AuthService
 })
 export class AuthModule {}

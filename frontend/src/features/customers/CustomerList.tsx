@@ -1,65 +1,79 @@
-import { useEffect, useState } from 'react';
-import apiClient from '../../api/client';
-import { VehicleList } from './VehicleList';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import type { CustomerType } from '../../types'; // Using CustomerType which includes vehicles
 
-// 1. Define an interface for the Vehicle data
-// This should match the expected structure for the 'vehicles' prop in VehicleList
-interface Vehicle {
-  id: string;
-  vin: string;
-  make: string;
-  model: string;
-  year: number;
-  trim: string;
-  engine: string;
-  drive: string;
-  mileage: number;
+/**
+ * Props for the CustomerList component.
+ * @interface CustomerListProps
+ * @property {CustomerType[]} customers - The list of customers to display.
+ * @property {string | null} selectedCustomerId - The ID of the currently selected customer.
+ * @property {(id: string) => void} onCustomerSelect - Callback to handle customer selection.
+ */
+interface CustomerListProps {
+  customers: CustomerType[];
+  selectedCustomerId: string | null;
+  onCustomerSelect: (id: string) => void;
 }
 
-// 2. Define an interface for the Customer data
-interface Customer {
-  id: string | number; // Or the specific type from your API (e.g., number, string)
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  address: string;
-  city: string;
-  state: string;
-  zip: string;
-  vehicles: Vehicle[]; // An array of Vehicle objects
-}
-
-export const CustomerList = () => {
-  // 3. Type your state with the Customer interface
-  const [customers, setCustomers] = useState<Customer[]>([]);
-
-  useEffect(() => {
-    apiClient.get('/customers').then(res => {
-      // Optional: You can add type assertion if your api client isn't strongly typed
-      // setCustomers(res.data as Customer[]);
-      setCustomers(res.data);
-    });
-  }, []);
-
+/**
+ * CustomerList Component
+ * Displays a list of customers in a table. Allows selecting a customer.
+ * This is a presentational component that receives its data and handlers via props.
+ */
+export const CustomerList: React.FC<CustomerListProps> = ({
+  customers,
+  selectedCustomerId,
+  onCustomerSelect,
+}) => {
   return (
-    <div className="space-y-6">
-      {customers.map((c) => (
-        <div key={c.id} className="border p-4 rounded-lg shadow-sm">
-          <h3 className="text-xl font-bold text-gray-800">{c.firstName}&nbsp;{c.lastName}</h3>
-          <p className="text-gray-500">{c.email} • {c.phone}</p>
-          <p className="text-sm text-gray-400">{c.address}</p>
-          <p className="text-sm text-gray-400">{c.city}</p>
-          <p className="text-sm text-gray-400">{c.state}</p>
-          <p className="text-sm text-gray-400">{c.zip}</p>
-
-          {/* Assuming VehicleList expects a prop named 'vehicles' of type Vehicle[] */}
-          <VehicleList vehicles={c.vehicles} />
+    <div className="card bg-base-100 shadow-xl">
+      <div className="card-body">
+        <h2 className="card-title">Customer List</h2>
+        <div className="overflow-x-auto">
+          <table className="table w-full table-hover">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {customers.map(customer => (
+                <tr
+                  key={customer.id}
+                  onClick={() => onCustomerSelect(customer.id)}
+                  className={selectedCustomerId === customer.id ? 'active' : ''}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <td>
+                    <div className="font-bold">{customer.firstName} {customer.lastName}</div>
+                  </td>
+                  <td>{customer.email}</td>
+                  <td>{customer.phone}</td>
+                  <th>
+                  <Link
+                      to={`/customers/${customer.id}`}
+                      className="btn btn-ghost btn-xs"
+                      onClick={e => e.stopPropagation()} // Prevent row click from firing when editing
+                    >
+                      Details
+                    </Link>
+                    <Link
+                      to={`/customers/${customer.id}/edit`}
+                      className="btn btn-ghost btn-xs"
+                      onClick={e => e.stopPropagation()} // Prevent row click from firing when editing
+                    >
+                      Edit
+                    </Link>
+                  </th>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      ))}
-      {customers.length === 0 && (
-        <p className="text-center text-gray-500">No customers found.</p>
-      )}
+      </div>
     </div>
   );
 };

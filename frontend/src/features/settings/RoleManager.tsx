@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import apiClient from '../../api/client';
 import { useAuth } from '../../context/AuthContext';
-import { User } from '../../types';
+import type { User } from '../../types';
 
 const RoleManager = () => {
   const [users, setUsers] = useState<User[]>([]);
