@@ -1,25 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import type { CustomerType } from '../../types'; // Using CustomerType which includes vehicles
+import { CustomerType } from '../../types';
 
-/**
- * Props for the CustomerList component.
- * @interface CustomerListProps
- * @property {CustomerType[]} customers - The list of customers to display.
- * @property {string | null} selectedCustomerId - The ID of the currently selected customer.
- * @property {(id: string) => void} onCustomerSelect - Callback to handle customer selection.
- */
 interface CustomerListProps {
   customers: CustomerType[];
   selectedCustomerId: string | null;
   onCustomerSelect: (id: string) => void;
 }
 
-/**
- * CustomerList Component
- * Displays a list of customers in a table. Allows selecting a customer.
- * This is a presentational component that receives its data and handlers via props.
- */
 export const CustomerList: React.FC<CustomerListProps> = ({
   customers,
   selectedCustomerId,
@@ -53,17 +41,18 @@ export const CustomerList: React.FC<CustomerListProps> = ({
                   <td>{customer.email}</td>
                   <td>{customer.phone}</td>
                   <th>
-                  <Link
+                    {/* Updated Link to go to the customer view page */}
+                    <Link
                       to={`/customers/${customer.id}`}
                       className="btn btn-ghost btn-xs"
-                      onClick={e => e.stopPropagation()} // Prevent row click from firing when editing
+                      onClick={e => e.stopPropagation()}
                     >
-                      Details
+                      View Details
                     </Link>
                     <Link
                       to={`/customers/${customer.id}/edit`}
                       className="btn btn-ghost btn-xs"
-                      onClick={e => e.stopPropagation()} // Prevent row click from firing when editing
+                      onClick={e => e.stopPropagation()}
                     >
                       Edit
                     </Link>
@@ -77,3 +66,5 @@ export const CustomerList: React.FC<CustomerListProps> = ({
     </div>
   );
 };
+
+

@@ -2,66 +2,83 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { CustomerForm } from '../features/customers/CustomerForm';
 import apiClient from '../api/client';
-import type { Customer } from '../types';
+import { Customer } from '../types';
+import { useToast } from '../context/ToastContext';
+import ConfirmationModal from '../components/modals/ConfirmationModal';
 
 /**
  * EditCustomerPage Component
- * * This component provides a page for editing an existing customer's information.
- * It fetches the customer data based on the ID from the URL, pre-fills the
- * CustomerForm, and handles the update submission.
+ * Provides a page for editing an existing customer's information and deleting them.
  */
 export const EditCustomerPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [customer, setCustomer] = useState<Customer | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { showToast } = useToast();
 
-  /**
-   * Effect hook to fetch customer data when the component mounts or the id changes.
-   */
   useEffect(() => {
-    const fetchCustomer = async () => {
-      try {
-        const response = await apiClient.get(`/customers/${id}`);
-        setCustomer(response.data);
-      } catch (error) {
-        console.error('Failed to fetch customer:', error);
-        // Optionally, navigate to a not-found page or show an error message
-      }
-    };
-
     if (id) {
-      fetchCustomer();
+      apiClient.get(`/customers/${id}`)
+        .then(res => setCustomer(res.data))
+        .catch(() => navigate('/404')); // Redirect if customer not found
     }
-  }, [id]);
+  }, [id, navigate]);
 
-  /**
-   * Handles the form submission to update the customer.
-   * On successful update, it navigates back to the main customers page.
-   * @param {Partial<Customer>} values - The updated customer data from the form.
-   */
   const handleUpdate = async (values: Partial<Customer>) => {
     try {
       await apiClient.patch(`/customers/${id}`, values);
-      navigate('/customers');
+      showToast('Customer updated successfully!', 'success');
+      navigate(`/customers/${id}`); // Navigate to the customer view page
     } catch (error) {
       console.error('Failed to update customer:', error);
-      // Here you might want to show a toast notification with the error
+      showToast('Failed to update customer.', 'error');
     }
   };
 
-  // Display a loading message while the customer data is being fetched.
+  const handleDelete = async () => {
+    setIsModalOpen(false); // Close the modal
+    try {
+      await apiClient.delete(`/customers/${id}`);
+      showToast('Customer deleted successfully!', 'success');
+      navigate('/customers'); // Navigate back to the main list
+    } catch (error) {
+      console.error('Failed to delete customer:', error);
+      showToast('Failed to delete customer.', 'error');
+    }
+  };
+
   if (!customer) {
     return <div>Loading...</div>;
   }
 
-  // Render the customer form with pre-filled data.
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Edit Customer</h1>
-      <CustomerForm
-        onSubmit={handleUpdate}
-        initialValues={customer}
+    <>
+      <div className="container mx-auto p-4">
+        <div className="flex justify-between items-center mb-4">
+            <h1 className="text-2xl font-bold">Edit Customer</h1>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="btn btn-error"
+            >
+              Delete Customer
+            </button>
+        </div>
+        <CustomerForm
+          onSubmit={handleUpdate}
+          initialValues={customer}
+        />
+      </div>
+
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleDelete}
+        title="Delete Customer"
+        message={`Are you sure you want to delete ${customer.firstName} ${customer.lastName}? This action cannot be undone.`}
       />
-    </div>
+    </>
   );
 };
+
+

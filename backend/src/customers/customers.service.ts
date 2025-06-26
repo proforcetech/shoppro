@@ -21,12 +21,14 @@ export class CustomersService {
     const { search, page = 1, limit = 10 } = params;
     const skip = (page - 1) * limit;
 
+    // The search now includes checks for email and phone number.
     const where: Prisma.CustomerWhereInput = search
       ? {
           OR: [
             { firstName: { contains: search, mode: 'insensitive' } },
             { lastName: { contains: search, mode: 'insensitive' } },
             { email: { contains: search, mode: 'insensitive' } },
+            { phone: { contains: search, mode: 'insensitive' } },
           ],
         }
       : {};

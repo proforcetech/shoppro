@@ -17,7 +17,6 @@ import { DefaultLayout } from './layouts/DefaultLayout';
 import CustomersPage from './pages/CustomersPage';
 import { EditCustomerPage } from './pages/EditCustomerPage';
 
-
 // Estimate Pages
 import EstimatesPage from './pages/EstimatesPage';
 
@@ -59,58 +58,18 @@ export default function App() {
 
             {/* Protected Routes */}
             <Route element={<DefaultLayout />}>
-              <Route path="/dashboard" element={
-                <ProtectedRoute role="MANAGER">
-                  <Dashboard />
-                </ProtectedRoute>
-              } />
-              <Route path="/customers" element={
-                <ProtectedRoute role="FRONT_DESK">
-                  <CustomersPage />
-                </ProtectedRoute>
-              } />
-              <Route path="/estimates" element={
-                <ProtectedRoute role="FRONT_DESK">
-                  <EstimatesPage />
-                </ProtectedRoute>
-              } />
-              <Route path="/invoices" element={
-                <ProtectedRoute role="FRONT_DESK">
-                  <InvoicesPage />
-                </ProtectedRoute>
-              } />
-              <Route path="/analytics" element={
-                <ProtectedRoute role="MANAGER">
-                  <AnalyticsPage />
-                </ProtectedRoute>
-              } />
-              <Route path="/appointments" element={
-                <ProtectedRoute role="FRONT_DESK">
-                  <AppointmentsPage />
-                </ProtectedRoute>
-              } />
-              <Route path="/settings" element={
-                <ProtectedRoute role="ADMIN">
-                  <SettingsPage />
-                </ProtectedRoute>
-              } />
-              <Route path="/reports" element={
-                <ProtectedRoute role="ACCOUNTANT">
-                  <ReportsPage />
-                </ProtectedRoute>
-              } />
-              <Route path="/support" element={
-                <ProtectedRoute>
-                  <SupportPage />
-                </ProtectedRoute>
-              } />
-              <Route path="/warranty" element={
-                <ProtectedRoute role="CUSTOMER">
-                  <WarrantyClaimsPage />
-                </ProtectedRoute>
-              } />
+              <Route path="/dashboard" element={ <ProtectedRoute role="MANAGER"> <Dashboard /> </ProtectedRoute> } />
+              <Route path="/customers/:id/edit" element={ <ProtectedRoute role="FRONT_DESK"> <EditCustomerPage /> </ProtectedRoute> } />
+              <Route path="/customers" element={ <ProtectedRoute role="FRONT_DESK"> <CustomersPage /> </ProtectedRoute> } />
+              <Route path="/estimates" element={ <ProtectedRoute role="FRONT_DESK"> <EstimatesPage /> </ProtectedRoute> } />
+              <Route path="/invoices" element={ <ProtectedRoute role="FRONT_DESK"> <InvoicesPage /> </ProtectedRoute> } />
+              <Route path="/analytics" element={ <ProtectedRoute role="MANAGER"> <AnalyticsPage /> </ProtectedRoute> } />
+              <Route path="/appointments" element={ <ProtectedRoute role="FRONT_DESK"> <AppointmentsPage /> </ProtectedRoute> } />
+              <Route path="/settings" element={ <ProtectedRoute role="ADMIN"> <SettingsPage /> </ProtectedRoute> } />
+              <Route path="/reports" element={ <ProtectedRoute role="ACCOUNTANT"> <ReportsPage /> </ProtectedRoute> } />               
+              <Route path="/support" element={ <ProtectedRoute> <SupportPage /> </ProtectedRoute> } />
+              <Route path="/warranty" element={ <ProtectedRoute role="CUSTOMER"> <WarrantyClaimsPage /> </ProtectedRoute> } />
             </Route>
-
             {/* Not Found Route */}
             <Route path="*" element={<NotFound />} />
           </Routes>
